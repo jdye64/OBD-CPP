@@ -37,7 +37,7 @@ class elm327 {
 
     char c;
 
-    boost::asio::read(sp, asio::buffer(&c,1));
+    boost::asio::read(sp, boost::asio::buffer(&c,1));
     sp.close();
     std::cout << "Read character: '" << c << "' from the serial port" << std::endl;
   }
