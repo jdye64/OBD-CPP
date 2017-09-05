@@ -19,11 +19,9 @@ class elm327 {
     std::cout << "Open ELM327 interface connection" << std::endl;
 
     // Open connection port
+    std::cout << "Opening serial port now" << std::endl;
     static boost::asio::io_service ios;
     boost::asio::serial_port sp(ios, portStr);
-    std::cout << "Opening serial port now" << std::endl;
-    sp.open("/dev/rfcomm0");
-    std::cout << "Done opening the serial port" << std::endl;
     std::cout << "Is /dev/rfcomm0 open?: " << sp.is_open() << std::endl;
 
 
@@ -36,6 +34,12 @@ class elm327 {
 //    sp.read_some(boost::asio::buffer(tmp));
 //    std::cout << tmp << std::endl;
 //    sp.close();
+
+    char c;
+
+    boost::asio::read(sp, asio::buffer(&c,1));
+    sp.close();
+    std::cout << "Read character: '" << c << "' from the serial port" << std::endl;
   }
 
   ~ elm327() {
