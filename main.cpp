@@ -1,21 +1,12 @@
 #include <iostream>
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
+#include "src/obd.h"
 
 int main() {
   std::cout << "Reading vehicle OBD data" << std::endl;
-
-  static boost::asio::io_service ios;
-  boost::asio::serial_port sp(ios, "/dev/rfcomm0");
-
-  //Set ASIO options
-  sp.set_option(boost::asio::serial_port::baud_rate(115200));
-
-  // You can set other options using similar syntax
-  char tmp[64];
-  sp.read_some(boost::asio::buffer(tmp));
-  std::cout << tmp << std::endl;
-  sp.close();
+  std::cout << "Creating OBD connection in Main ...." << std::endl;
+  obd obd;
+  obd.connect("/dev/rcomm0", 115200);
+  std::cout << "Done creating OBD object" << std::endl;
 
   return 0;
 }
