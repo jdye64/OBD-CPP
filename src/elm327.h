@@ -46,7 +46,8 @@ class elm327 {
 
     // ATE0 Echo Off
     try {
-      sp.write_some("ATE0");
+      char *atData = "ATE0";
+      sp.write_some(boost::asio::buffer(atData), strlen(atData));
     } catch (...) {
       std::cout << "Error setting ATE0 to Echo OFF" << std::endl;
       exit(-1);
