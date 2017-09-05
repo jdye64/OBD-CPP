@@ -5,8 +5,8 @@
 #ifndef OBD_CPP_ELM327_H
 #define OBD_CPP_ELM327_H
 
-#import "OBDStatus.h"
-#import "iostream"
+#include "OBDStatus.h"
+#include "iostream"
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
 
