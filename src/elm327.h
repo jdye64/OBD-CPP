@@ -21,6 +21,11 @@ class elm327 {
     // Open connection port
     static boost::asio::io_service ios;
     boost::asio::serial_port sp(ios, portStr);
+    std::cout << "Opening serial port now" << std::endl;
+    sp.open("/dev/rfcomm0");
+    std::cout << "Done opening the serial port" << std::endl;
+    std::cout << "Is /dev/rfcomm0 open?: " << sp.is_open() << endl;
+
 
     //Set ASIO options
     std::cout << "Setting boost.asio options on serial connection" << std::endl;
