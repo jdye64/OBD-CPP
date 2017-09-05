@@ -24,7 +24,7 @@ class elm327 {
     std::cout << "Opening serial port now" << std::endl;
     sp.open("/dev/rfcomm0");
     std::cout << "Done opening the serial port" << std::endl;
-    std::cout << "Is /dev/rfcomm0 open?: " << sp.is_open() << endl;
+    std::cout << "Is /dev/rfcomm0 open?: " << sp.is_open() << std::endl;
 
 
     //Set ASIO options
