@@ -37,7 +37,8 @@ class elm327 {
 
     // ATZ (reset)
     try {
-      sp.write_some("ATZ");
+      const char* data = "ATZ";
+      sp.write_some(boost::asio::buffer(data, strlen(data)));
     } catch (...) {
       std::cout << "Error occured while trying to reset ATZ" << std::endl;
       exit(-1);
