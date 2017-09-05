@@ -29,17 +29,29 @@ class elm327 {
     std::cout << "Setting boost.asio options on serial connection" << std::endl;
     sp.set_option(boost::asio::serial_port::baud_rate(baudRate));
 
-//    // You can set other options using similar syntax
-//    char tmp[64];
-//    sp.read_some(boost::asio::buffer(tmp));
-//    std::cout << tmp << std::endl;
+//    char c;
+//
+//    boost::asio::read(sp, boost::asio::buffer(&c,1));
 //    sp.close();
+//    std::cout << "Read character: '" << c << "' from the serial port" << std::endl;
 
-    char c;
+    // ATZ (reset)
+    try {
+      sp.write_some("ATZ");
+    } catch (...) {
+      std::cout << "Error occured while trying to reset ATZ" << std::endl;
+      exit(-1);
+    }
 
-    boost::asio::read(sp, boost::asio::buffer(&c,1));
-    sp.close();
-    std::cout << "Read character: '" << c << "' from the serial port" << std::endl;
+    // ATE0 Echo Off
+    try {
+      sp.write_some("ATE0");
+    } catch (...) {
+      std::cout << "Error setting ATE0 to Echo OFF" << std::endl;
+      exit(-1);
+    }
+
+    std::cout << "Finished connecting to ELM327 Interface!!!" << std::endl;
   }
 
   ~ elm327() {
