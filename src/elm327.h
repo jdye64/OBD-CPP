@@ -39,6 +39,7 @@ class elm327 {
 
   boost::asio::serial_port _serialPort;
   int _defaultReadBytes = 64;
+  char *_obdStatus = NOT_CONNECTED;
 
 };
 

@@ -51,6 +51,12 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios, portStr) {
     exit(-1);
   }
 
+  std::cout << std::endl << "Successfully communicated with the ELM but not yet the Car" << std::endl;
+  _obdStatus = ELM_CONNECTED;
+
+  // Try to communicate with the car and load the Supported protocols
+
+
   std::cout << std::endl << "Finished connecting to ELM327 Interface!!!" << std::endl;
 }
 
