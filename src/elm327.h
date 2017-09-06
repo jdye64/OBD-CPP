@@ -44,7 +44,7 @@ class elm327 {
       char c;
       do {
         sp.read_some(boost::asio::buffer(&c, 1));
-        std::cout << "Read data: '" << c << "' from the serial port";
+        std::cout << "Read data: '" << c << "' from the serial port" << std::endl;
       } while(c != '>');
 
     } catch (...) {
@@ -56,6 +56,14 @@ class elm327 {
     try {
       const char *atData = "ATE0";
       sp.write_some(boost::asio::buffer(atData, strlen(atData)));
+
+      std::cout << "Reading the input after ATE0 Echo Off" << std::endl;
+      char c;
+      do {
+        sp.read_some(boost::asio::buffer(&c, 1));
+        std::cout << "Read data: '" << c << "' from the serial port" << std::endl;
+      } while(c != '>');
+
     } catch (...) {
       std::cout << "Error setting ATE0 to Echo OFF" << std::endl;
       exit(-1);
@@ -65,6 +73,14 @@ class elm327 {
     try {
       const char *athData = "ATH1";
       sp.write_some(boost::asio::buffer(athData, strlen(athData)));
+
+      std::cout << "Reading the input after ATH1 Headers On" << std::endl;
+      char c;
+      do {
+        sp.read_some(boost::asio::buffer(&c, 1));
+        std::cout << "Read data: '" << c << "' from the serial port" << std::endl;
+      } while(c != '>');
+
     } catch (...) {
       std::cout << "Error setting ATH1 Header on" << std::endl;
       exit(-1);
@@ -74,12 +90,20 @@ class elm327 {
     try {
       const char *atlData = "ATL0";
       sp.write_some(boost::asio::buffer(atlData, strlen(atlData)));
+
+      std::cout << "Reading the input after ATL0 Linefeeds Off" << std::endl;
+      char c;
+      do {
+        sp.read_some(boost::asio::buffer(&c, 1));
+        std::cout << "Read data: '" << c << "' from the serial port" << std::endl;
+      } while(c != '>');
+
     } catch (...) {
       std::cout << "Error setting ATL0 Linefeeds Off" << std::endl;
       exit(-1);
     }
 
-    std::cout << "Finished connecting to ELM327 Interface!!!" << std::endl;
+    std::cout << std::endl << "Finished connecting to ELM327 Interface!!!" << std::endl;
   }
 
   ~ elm327() {
