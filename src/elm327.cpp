@@ -93,7 +93,7 @@ std::string elm327::_send(const char* cmd, int msDelay) {
 
 }
 
-std::string elm327::_write(const char* cmd, intmsDelay) {
+std::string elm327::_write(const char* cmd, int msDelay) {
 
 }
 
