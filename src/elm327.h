@@ -10,6 +10,11 @@
 #include <sstream>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include <chrono>
+#include <thread>
+
+static boost::asio::io_service ios;
+static const char _ELM_PROMPT = '>';
 
 class elm327 {
 
@@ -24,11 +29,9 @@ class elm327 {
 
  protected:
 
-  static const char _ELM_PROMPT = '>';
+  std::string _send(char* cmd, int msDelay);
 
-  std::string _send(const char* cmd, int msDelay);
-
-  std::string _write(const char* cmd, intmsDelay);
+  void _write(char* cmd);
 
   std::string _read();
 
