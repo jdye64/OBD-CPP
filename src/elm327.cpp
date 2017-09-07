@@ -134,23 +134,22 @@ std::string elm327::_read() {
 
   std::cout << "Creating std::string buffer object" << std::endl;
   std::string buffer;
-  //char *data;
+  char *data[_defaultReadBytes];
 
   while (true) {
     // retrieve as much data as possible.
     std::cout << "Passing data object off to boost::asio" << std::endl;
-//    _serialPort.read_some(boost::asio::buffer(&data, _defaultReadBytes));
-//    if (!data) {
-//      std::cout << "Failed to read data from serial port" << std::endl;
-//      break;
-//    }
-
-    char *data[_defaultReadBytes];
     _serialPort.read_some(boost::asio::buffer(data, _defaultReadBytes));
+    if (!data) {
+      std::cout << "Failed to read data from serial port" << std::endl;
+      break;
+    }
 
     std::cout << "Before appending data to buffer" << std::endl;
     std::cout << "Appending data: " << data << " to the buffer" << std::endl;
     //buffer += data;
+    std::string tmpData(*data);
+    buffer.append(tmpData);
     std::cout << "After writing to buffer" << std::endl;
 
     std::cout << "Checking for ELM Chevron character and removing it if it exists" << std::endl;
