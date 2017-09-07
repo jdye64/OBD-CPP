@@ -146,7 +146,9 @@ std::string elm327::_read() {
     }
 
     std::cout << "Before appending data to buffer" << std::endl;
+    std::cout << "Appending data: " << data << " to the buffer" << std::endl;
     buffer.append(data);
+    std::cout << "After writing to buffer" << std::endl;
 
     // End on a chevron (ELM prompt character)
     if (strstr(data, &_ELM_PROMPT) != NULL) {
