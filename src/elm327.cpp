@@ -125,12 +125,15 @@ void elm327::_write(char* cmd) {
  */
 std::string elm327::_read() {
 
+  std::cout << "Entering _read()" << std::endl;
+
   if (!_serialPort.is_open()) {
     std::cout << "cannot perform _read() operation. Serial port is not open/connected" << std::endl;
     return std::string("");
   }
 
-  std::stringstream buffer;
+  std::cout << "Creating std::string buffer object" << std::endl;
+  std::string buffer;
   char *data;
 
   while (true) {
@@ -141,7 +144,7 @@ std::string elm327::_read() {
       break;
     }
 
-    buffer << data;
+    buffer.append(data);
 
     // End on a chevron (ELM prompt character)
     if (strstr(data, &_ELM_PROMPT) != NULL) {
@@ -163,8 +166,8 @@ std::string elm327::_read() {
   //
   //return lines
 
-  std::string str = buffer.str();
-  std::cout << "_read() -> '" << str.c_str() << "'" << std::endl;
-  return str;
+  std::cout << "Output buffer std::string" << std::endl;
+  std::cout << "_read() -> '" << buffer.c_str() << "'" << std::endl;
+  return buffer.c_str();
 
 }
