@@ -4,12 +4,19 @@
 
 #include "elm327.h"
 
-elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios, portStr) {
+elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
 
   std::cout << "Open ELM327 interface connection" << std::endl;
 
   // Open connection port
   std::cout << "Opening serial port now" << std::endl;
+
+  boost::system::error_code ec;
+  _serialPort.open(portStr, ec);
+  if (ec) {
+    std::cout << "error : _serialPort->open() failed...com_port_name="
+              << portStr << ", e=" << ec.message().c_str() << std::endl;
+  }
 
   //_serialPort = boost::asio::serial_port(ios, portStr);
   std::cout << "Is /dev/rfcomm0 open?: " << _serialPort.is_open() << std::endl;
