@@ -145,7 +145,7 @@ std::string elm327::_read() {
 
   std::cout << "Creating std::string buffer object" << std::endl;
   std::string buffer;
-  char *data[_defaultReadBytes];
+  char data[_defaultReadBytes];
 
   while (true) {
     // retrieve as much data as possible.
@@ -158,13 +158,13 @@ std::string elm327::_read() {
 
     std::cout << "Before appending data to buffer" << std::endl;
     std::cout << "Appending data: " << data << " to the buffer" << std::endl;
-    std::string tmpData(*data);
-    buffer.append(tmpData);
+    //std::string tmpData(data);
+    buffer.append(data);
     std::cout << "After writing to buffer" << std::endl;
 
     std::cout << "Checking for ELM Chevron character and removing it if it exists" << std::endl;
     // End on a chevron (ELM prompt character)
-    if (strstr(*data, &_ELM_PROMPT) != NULL) {
+    if (strstr(data, &_ELM_PROMPT) != NULL) {
       std::cout << "ELM Prompt Chevron found in data C String" << std::endl;
       break;
     }
