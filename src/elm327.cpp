@@ -138,12 +138,14 @@ std::string elm327::_read() {
 
   while (true) {
     // retrieve as much data as possible.
+    std::cout << "Passing data object off to boost::asio" << std::endl;
     _serialPort.read_some(boost::asio::buffer(&data, _defaultReadBytes));
     if (!data) {
       std::cout << "Failed to read data from serial port" << std::endl;
       break;
     }
 
+    std::cout << "Before appending data to buffer" << std::endl;
     buffer.append(data);
 
     // End on a chevron (ELM prompt character)
