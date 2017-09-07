@@ -54,10 +54,37 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios, portStr) {
   std::cout << std::endl << "Successfully communicated with the ELM but not yet the Car" << std::endl;
   _obdStatus = ELM_CONNECTED;
 
-  // Try to communicate with the car and load the Supported protocols
+  // Right now just manually set the protocol that will be used for this implementation
+//  r = self.__send(b"ATTP" + protocol.encode())
+//  r0100 = self.__send(b"0100")
+//
+//  if not self.__has_message(r0100, "UNABLE TO CONNECT"):
+//# success, found the protocol
+//  self.__protocol = self._SUPPORTED_PROTOCOLS[protocol](r0100)
+//  return True
+//
+//
+//  std::cout << std::endl << "Finished connecting to ELM327 Interface!!!" << std::endl;
+}
 
+/**
+ * Sends the command string and parse the response lines with the protocol object.
+ * An empty command string will re-trigger the previous command.
+ *
+ * @param cmd
+ * @return
+ */
+std::string elm327::_send_and_parse(char* cmd) {
 
-  std::cout << std::endl << "Finished connecting to ELM327 Interface!!!" << std::endl;
+  if (_obdStatus == NOT_CONNECTED) {
+    std::cout << "cannot _send_and_parse() when unconnected" << std::endl;
+    return std::string("");
+  }
+
+  std::string lines = _send(cmd, 0);
+  return lines;
+//  messages = self.__protocol(lines)
+//  return messages
 }
 
 std::string elm327::_send(char* cmd, int msDelay) {
@@ -75,7 +102,7 @@ std::string elm327::_send(char* cmd, int msDelay) {
 
 void elm327::_write(char* cmd) {
 
-  if (!_serialPort.is_open()) {
+  if (_serialPort.is_open()) {
     char *updatedCommand = strcat(cmd, "\r\n");  // Terminate
     std::cout << "Writing CMD: '" << updatedCommand << "'" << std::endl;
     _serialPort.write_some(boost::asio::buffer(updatedCommand, strlen(updatedCommand)));

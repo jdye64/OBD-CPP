@@ -28,7 +28,7 @@ class obd {
   // Attempts to instantiate an ELM327 connection object
   void connect(char *portStr, int baudrate);
 
-  void loadCommands();
+  char* query(char *cmd);
 
  protected:
   char *_portStr;      // Identifier for the serial port connection
@@ -36,6 +36,9 @@ class obd {
   int _commands[7];  // Only 7 commands supported by elm327 interface
   bool _fast;        // Global switch for running optimizations
   int _lastCommand;   // Last command used for running previous command.
+
+ private:
+  void buildCommandString(char *cmd);
 };
 
 #endif //OBD_CPP_OBD_H

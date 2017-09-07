@@ -29,6 +29,8 @@ class elm327 {
 
  protected:
 
+  std::string _send_and_parse(char* cmd);
+
   std::string _send(char* cmd, int msDelay);
 
   void _write(char* cmd);
