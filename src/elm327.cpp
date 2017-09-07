@@ -159,6 +159,7 @@ std::string elm327::_read() {
     printf ("[%s] is a string %d chars long\n", buffer.c_str(), buffer.length());
     std::cout << "Appending data: '" << data << "' to the buffer" << std::endl;
     buffer.append(data);
+    std::replace( buffer.begin(), buffer.end(), '\r', 'A');
     std::cout << "Buffer after appending: " << buffer.c_str() << std::endl;
 
     // End on a chevron (ELM prompt character)
