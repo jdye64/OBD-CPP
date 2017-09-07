@@ -11,12 +11,16 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios, portStr) {
   // Open connection port
   std::cout << "Opening serial port now" << std::endl;
 
-  //elm327._serialPort = boost::asio::serial_port(ios, portStr);
+  //_serialPort = boost::asio::serial_port(ios, portStr);
   std::cout << "Is /dev/rfcomm0 open?: " << _serialPort.is_open() << std::endl;
 
   //Set ASIO options
   std::cout << "Setting boost.asio options on serial connection" << std::endl;
   _serialPort.set_option(boost::asio::serial_port::baud_rate(baudRate));
+  _serialPort.set_option(boost::asio::serial_port_base::character_size(8));
+  _serialPort.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
+  _serialPort.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
+  _serialPort.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
 
   std::string resp;
   // ATZ (reset)
@@ -147,7 +151,6 @@ std::string elm327::_read() {
 
     std::cout << "Before appending data to buffer" << std::endl;
     std::cout << "Appending data: " << data << " to the buffer" << std::endl;
-    //buffer += data;
     std::string tmpData(*data);
     buffer.append(tmpData);
     std::cout << "After writing to buffer" << std::endl;

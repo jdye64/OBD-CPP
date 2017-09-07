@@ -29,8 +29,6 @@ char* obd::query(char *cmd) {
   std::cout << "Sending CMD: " << cmd << std::endl;
 
   obd::buildCommandString(cmd);
-
-
 }
 
 // Creates the appropriate command string to send to the elm327 interface
