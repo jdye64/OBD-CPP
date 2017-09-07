@@ -103,12 +103,14 @@ std::string elm327::_send(char* cmd, int msDelay) {
 void elm327::_write(char* cmd) {
 
   std::cout << "Entering _write()" << std::endl;
+  std::string tData(cmd);
 
   if (_serialPort.is_open()) {
-    std::cout << "CMD current value is: " << cmd << std::endl;
-    char *updatedCommand = strcat(cmd, "\r\n");  // Terminate
-    std::cout << "Writing updated CMD: " << updatedCommand << std::endl;
-    _serialPort.write_some(boost::asio::buffer(updatedCommand, strlen(updatedCommand)));
+    std::cout << "CMD current value is: " << tData << std::endl;
+    //char *updatedCommand = strcat(cmd, "\r\n");
+    tData.append("\r\n");
+    std::cout << "Writing updated CMD: " << tData << std::endl;
+    _serialPort.write_some(boost::asio::buffer(tData, tData.length()));
   } else {
     std::cout << "Cannot perform _write() operation when the vehicle is not connected" << std::endl;
   }
