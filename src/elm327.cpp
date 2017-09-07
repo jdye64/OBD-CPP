@@ -143,8 +143,8 @@ std::string elm327::_read() {
     return std::string("");
   }
 
-  std::cout << "Creating std::string buffer object" << std::endl;
   std::string buffer;
+  buffer.clear();
   char data[_defaultReadBytes];
 
   while (true) {
@@ -164,6 +164,9 @@ std::string elm327::_read() {
       std::cout << "ELM Prompt Chevron found in data C String" << std::endl;
       break;
     }
+
+    // Clear out the char array for the next pass
+    memset(data, 0, strlen(data));
 
   }
 
