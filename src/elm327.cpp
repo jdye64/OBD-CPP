@@ -3,6 +3,7 @@
 //
 
 #include "elm327.h"
+#include <stdio.h>
 
 elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
 
@@ -155,6 +156,7 @@ std::string elm327::_read() {
       break;
     }
 
+    printf ("[%s] is a string %d chars long\n", buffer.c_str(), buffer.length());
     std::cout << "Appending data: '" << data << "' to the buffer" << std::endl;
     buffer.append(data);
     std::cout << "Buffer after appending: " << buffer.c_str() << std::endl;
