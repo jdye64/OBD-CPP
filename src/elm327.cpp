@@ -71,6 +71,9 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
     std::cout << "Error setting protocol" << std::endl;
     exit(-1);
   }
+
+  resp = _send("010C", 0);    // Engine RPM request
+  std::cout << "Engine RPM: " << resp << std::endl;
 }
 
 /**
