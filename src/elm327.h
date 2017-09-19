@@ -12,6 +12,7 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <thread>
+#include <string>
 
 static boost::asio::io_service ios;
 static const char _ELM_PROMPT = '>';
@@ -26,6 +27,10 @@ class elm327 {
     std::cout << "Closing ELM327 Interface" << std::endl;
     _serialPort.close();
   }
+
+  void removeAllOccurances(std::string &s, char *toRemove);
+
+  std::vector<std::string> splitMessageToLines(std::string &s);
 
  protected:
 

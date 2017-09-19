@@ -1,7 +1,3 @@
-//
-// Created by Jeremy Dyer on 9/5/17.
-//
-
 #include "elm327.h"
 #include <stdio.h>
 
@@ -129,6 +125,7 @@ void elm327::_write(char* cmd) {
 
 }
 
+
 /**
  * "low-level" read function accumulates characters until the prompt character is seen
  *
@@ -147,19 +144,20 @@ std::string elm327::_read() {
   std::string buffer;
   buffer.clear();
   char data[_defaultReadBytes];
+  int numBytes = 0;
 
   while (true) {
     // retrieve as much data as possible.
-    _serialPort.read_some(boost::asio::buffer(data, _defaultReadBytes));
-    if (!data) {
+    size_t bytesWritten = _serialPort.read_some(boost::asio::buffer(data, _defaultReadBytes));
+    if (bytesWritten <= 0) {
       std::cout << "Failed to read data from serial port" << std::endl;
       break;
     }
+    numBytes += bytesWritten;
 
     printf ("[%s] is a string %d chars long\n", buffer.c_str(), buffer.length());
-    std::cout << "Appending data: '" << data << "' to the buffer" << std::endl;
-    buffer.append(data);
-    //std::replace( buffer.begin(), buffer.end(), '\r', 'A');
+    std::cout << "Appending data: '" << data << "' to the buffer with size: " << strlen(data) << std::endl;
+    buffer += data;
     std::cout << "Buffer after appending: " << buffer.c_str() << std::endl;
 
     // End on a chevron (ELM prompt character)
@@ -170,23 +168,50 @@ std::string elm327::_read() {
 
     // Clear out the char array for the next pass
     memset(data, 0, strlen(data));
-
   }
 
-  // Clean out an null characters
-  //buffer = re.sub(b"\x00", b"", buffer)
+  // Remove the ELM prompt
+  elm327::removeAllOccurances(buffer, ">");
 
-  // Remove the prompt character
-  //if buffer.endswith(self.ELM_PROMPT):
-  //  buffer = buffer[:-1]
+  std::vector<std::string> lines = elm327::splitMessageToLines(buffer);
+  std::cout << lines.size() << " lines split from the entire message received" << std::endl;
 
-  //# splits into lines while removing empty lines and trailing spaces
-  //lines = [ s.strip() for s in re.split("[\r\n]", string) if bool(s) ]
-  //
-  //return lines
-
+  std::cout << numBytes << " were read from the input" << std::endl;
   std::cout << "Output buffer std::string" << std::endl;
   std::cout << "_read() -> '" << buffer.c_str() << "'" << std::endl;
   return buffer.c_str();
 
+}
+
+
+void elm327::removeAllOccurances(std::string &s, char *toRemove) {
+  std::string::size_type n;
+  n = s.find(toRemove);
+  while (n != std::string::npos) {
+    s.erase(n, strlen(toRemove));
+    n = s.find(toRemove);
+  }
+}
+
+std::vector<std::string> elm327::splitMessageToLines(std::string &s) {
+  std::vector<std::string> lines;
+  int lastFindIndex = 0;
+  std::string::size_type n;
+  n = s.find("\r\n");
+  while (n != std::string::npos) {
+    if (n > 0) {
+      std::string f = s.substr(lastFindIndex, n - lastFindIndex);
+      lines.push_back(f);
+      lastFindIndex = n + 2;
+    } else {
+      //This is the beginning of the string so just updated the last fine index.
+      lastFindIndex = 2;  // length of \r\n
+    }
+    n = s.find("\r\n", lastFindIndex);
+  }
+
+  //Add the last element to the vector
+  lines.push_back(s.substr(lastFindIndex, s.length() - lastFindIndex));
+
+  return lines;
 }
