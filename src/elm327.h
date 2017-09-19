@@ -28,7 +28,7 @@ class elm327 {
     _serialPort.close();
   }
 
-  void removeAllOccurances(std::string &s, char *toRemove);
+  std::string removeAllOccurances(std::string &s, char *toRemove);
 
   std::vector<std::string> splitMessageToLines(std::string &s);
 

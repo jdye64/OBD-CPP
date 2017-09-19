@@ -158,6 +158,8 @@ std::string elm327::_read() {
     printf ("[%s] is a string %d chars long\n", buffer.c_str(), buffer.length());
     std::cout << "Appending data: '" << data << "' to the buffer with size: " << strlen(data) << std::endl;
     buffer += data;
+    buffer = elm327::removeAllOccurances(buffer, "\r");
+    buffer = elm327::removeAllOccurances(buffer, "\n");
     std::cout << "Buffer after appending: " << buffer.c_str() << std::endl;
 
     // End on a chevron (ELM prompt character)
@@ -171,7 +173,7 @@ std::string elm327::_read() {
   }
 
   // Remove the ELM prompt
-  elm327::removeAllOccurances(buffer, ">");
+  buffer = elm327::removeAllOccurances(buffer, ">");
 
   std::vector<std::string> lines = elm327::splitMessageToLines(buffer);
   std::cout << lines.size() << " lines split from the entire message received" << std::endl;
@@ -184,13 +186,14 @@ std::string elm327::_read() {
 }
 
 
-void elm327::removeAllOccurances(std::string &s, char *toRemove) {
+std::string elm327::removeAllOccurances(std::string &s, char *toRemove) {
   std::string::size_type n;
   n = s.find(toRemove);
   while (n != std::string::npos) {
     s.erase(n, strlen(toRemove));
     n = s.find(toRemove);
   }
+  return s;
 }
 
 std::vector<std::string> elm327::splitMessageToLines(std::string &s) {
