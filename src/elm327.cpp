@@ -110,7 +110,7 @@ std::string elm327::_send(char* cmd, int msDelay) {
 
 void elm327::_write(char* cmd) {
 
-  std::cout << "Entering _write()" << std::endl;
+  std::cout << std::endl << "Entering _write()" << std::endl;
   std::string tData(cmd);
 
   if (_serialPort.is_open()) {
@@ -134,7 +134,7 @@ void elm327::_write(char* cmd) {
  */
 std::string elm327::_read() {
 
-  std::cout << "Entering _read()" << std::endl;
+  std::cout << std::endl << "Entering _read()" << std::endl;
 
   if (!_serialPort.is_open()) {
     std::cout << "cannot perform _read() operation. Serial port is not open/connected" << std::endl;
@@ -148,18 +148,21 @@ std::string elm327::_read() {
 
   while (true) {
     // retrieve as much data as possible.
-    size_t bytesWritten = _serialPort.read_some(boost::asio::buffer(data, _defaultReadBytes));
-    if (bytesWritten <= 0) {
+    size_t bytesRead = _serialPort.read_some(boost::asio::buffer(data, _defaultReadBytes));
+    if (bytesRead <= 0) {
       std::cout << "Failed to read data from serial port" << std::endl;
       break;
     }
-    numBytes += bytesWritten;
+    numBytes += bytesRead;
 
+    std::cout << "Bytes read: " << bytesRead << std::endl;
     printf ("[%s] is a string %d chars long\n", buffer.c_str(), buffer.length());
     std::cout << "Appending data: '" << data << "' to the buffer with size: " << strlen(data) << std::endl;
-    buffer += data;
+    //buffer += data;
+    buffer.append(data, bytesRead);
     buffer = elm327::removeAllOccurances(buffer, "\r");
     buffer = elm327::removeAllOccurances(buffer, "\n");
+    buffer = elm327::removeAllOccurances(buffer, "0x00");
     std::cout << "Buffer after appending: " << buffer.c_str() << std::endl;
 
     // End on a chevron (ELM prompt character)
