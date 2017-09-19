@@ -62,17 +62,15 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
   std::cout << std::endl << "Successfully communicated with the ELM but not yet the Car" << std::endl;
   _obdStatus = ELM_CONNECTED;
 
-  // Right now just manually set the protocol that will be used for this implementation
-//  r = self.__send(b"ATTP" + protocol.encode())
-//  r0100 = self.__send(b"0100")
-//
-//  if not self.__has_message(r0100, "UNABLE TO CONNECT"):
-//# success, found the protocol
-//  self.__protocol = self._SUPPORTED_PROTOCOLS[protocol](r0100)
-//  return True
-//
-//
-//  std::cout << std::endl << "Finished connecting to ELM327 Interface!!!" << std::endl;
+  // Manually set the protocol
+  try {
+    resp = _send("ATTPSAE_J1850_VPW", 0);
+    resp = _send("0100", 0);
+    std::cout << "Response from setting protocol: " << resp << std::endl;
+  } catch (...) {
+    std::cout << "Error setting protocol" << std::endl;
+    exit(-1);
+  }
 }
 
 /**
@@ -103,9 +101,7 @@ std::string elm327::_send(char* cmd, int msDelay) {
     std::cout << "Sleeping for " << msDelay << " milliseconds" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(msDelay));
   }
-  std::cout << "Exiting _send(), but before _read() is called" << std::endl;
   return _read();
-
 }
 
 void elm327::_write(char* cmd) {
@@ -115,7 +111,6 @@ void elm327::_write(char* cmd) {
 
   if (_serialPort.is_open()) {
     std::cout << "CMD current value is: " << tData << std::endl;
-    //char *updatedCommand = strcat(cmd, "\r\n");
     tData.append("\r\n");
     std::cout << "Writing updated CMD: " << tData << std::endl;
     _serialPort.write_some(boost::asio::buffer(tData, tData.length()));
@@ -155,19 +150,13 @@ std::string elm327::_read() {
     }
     numBytes += bytesRead;
 
-    std::cout << "Bytes read: " << bytesRead << std::endl;
-    printf ("[%s] is a string %d chars long\n", buffer.c_str(), buffer.length());
-    std::cout << "Appending data: '" << data << "' to the buffer with size: " << strlen(data) << std::endl;
-    //buffer += data;
     buffer.append(data, bytesRead);
     buffer = elm327::removeAllOccurances(buffer, "\r");
     buffer = elm327::removeAllOccurances(buffer, "\n");
     buffer = elm327::removeAllOccurances(buffer, "0x00");
-    std::cout << "Buffer after appending: " << buffer.c_str() << std::endl;
 
     // End on a chevron (ELM prompt character)
     if (strstr(data, &_ELM_PROMPT) != NULL) {
-      std::cout << "ELM Prompt Chevron found in data C String" << std::endl;
       break;
     }
 
@@ -181,9 +170,7 @@ std::string elm327::_read() {
   std::vector<std::string> lines = elm327::splitMessageToLines(buffer);
   std::cout << lines.size() << " lines split from the entire message received" << std::endl;
 
-  std::cout << numBytes << " were read from the input" << std::endl;
-  std::cout << "Output buffer std::string" << std::endl;
-  std::cout << "_read() -> '" << buffer.c_str() << "'" << std::endl;
+  std::cout << "_read() -> '" << buffer.c_str() << "' Bytes: " << numBytes << std::endl;
   return buffer.c_str();
 
 }
