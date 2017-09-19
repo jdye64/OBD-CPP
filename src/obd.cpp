@@ -23,12 +23,18 @@ void obd::connect(char *portStr, int baudrate) {
 
   // Create the ELM327 interface connection
   elm327 elm(portStr, baudrate);
+
+  std::cout << "Querying car with 010C Engine RPM" << std::endl;
+  //char *resp = obd::query("010C");
+  std::string resp = elm._send_and_parse("010C");
+  std::cout << "Response: " << resp << std::endl;
 }
 
 char* obd::query(char *cmd) {
   std::cout << "Sending CMD: " << cmd << std::endl;
 
-  obd::buildCommandString(cmd);
+
+  //obd::buildCommandString(cmd);
 }
 
 // Creates the appropriate command string to send to the elm327 interface

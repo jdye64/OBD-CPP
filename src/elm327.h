@@ -32,9 +32,9 @@ class elm327 {
 
   std::vector<std::string> splitMessageToLines(std::string &s);
 
- protected:
-
   std::string _send_and_parse(char* cmd);
+
+ protected:
 
   std::string _send(char* cmd, int msDelay);
 

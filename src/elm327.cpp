@@ -110,7 +110,6 @@ void elm327::_write(char* cmd) {
   std::string tData(cmd);
 
   if (_serialPort.is_open()) {
-    std::cout << "CMD current value is: " << tData << std::endl;
     tData.append("\r\n");
     std::cout << "Writing updated CMD: " << tData << std::endl;
     _serialPort.write_some(boost::asio::buffer(tData, tData.length()));
