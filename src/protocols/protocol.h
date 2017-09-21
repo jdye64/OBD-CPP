@@ -98,8 +98,6 @@ class protocol {
   int TX_ID_ENGINE = 0;
   int TX_ID_TRANSMISSION = 0;
 
-  static std::string removeAllOccurances(std::string &s, char *toRemove);
-
   protocol() {
 
   }

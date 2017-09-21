@@ -9,7 +9,14 @@ Frame::Frame(std::string raw) {
   std::cout << "Creating Frame from RAW: " << raw << std::endl;
   std::cout << "RAW Length: " << raw.size() << std::endl;
 
-  raw = protocol::removeAllOccurances(raw, " ");
+
+  std::string::size_type n;
+  n = raw.find(" ");
+  while (n != std::string::npos) {
+    raw.erase(n, strlen(" "));
+    n = raw.find(" ");
+  }
+  
   std::cout << "RAW Length: " << raw.size() << std::endl;
   std::vector<char> bytes;
 
@@ -36,16 +43,6 @@ Frame::Frame(std::string raw) {
   std::cout << (first + second) << std::endl;
   std::cout << ((first + second) / 4) << " RPM" << std::endl;
 
-}
-
-std::string protocol::removeAllOccurances(std::string &s, char *toRemove) {
-  std::string::size_type n;
-  n = s.find(toRemove);
-  while (n != std::string::npos) {
-    s.erase(n, strlen(toRemove));
-    n = s.find(toRemove);
-  }
-  return s;
 }
 
 Message::Message() {
