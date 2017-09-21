@@ -18,8 +18,12 @@ void obd::connect(char *portStr, int baudrate) {
   elm327 elm(portStr, baudrate);
 
   std::cout << "Querying car with 010C Engine RPM" << std::endl;
-  Message m = elm._send_and_parse("010C");
-  std::cout << "Engine RPM: " << m.getData() << std::endl;
+  while (true) {
+    Message m = elm._send_and_parse("010C");
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
+
+  //std::cout << "Engine RPM: " << m.getData() << std::endl;
 }
 
 char* obd::query(char *cmd) {

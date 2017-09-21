@@ -21,13 +21,13 @@ Frame::Frame(std::string raw) {
 
   for (unsigned int i = 0; i < raw.length(); i += 2) {
     std::string byteString = raw.substr(i, 2);
-    std::cout << "Byte String: " << byteString << std::endl;
+    //std::cout << "Byte String: " << byteString << std::endl;
     char byte = (char) strtol(byteString.c_str(), NULL, 16);
     bytes.push_back(byte);
     byteStrings.push_back(byteString);
   }
 
-  std::cout << "Number of Bytes: " << bytes.size() << std::endl;
+  //std::cout << "Number of Bytes: " << bytes.size() << std::endl;
 
   // Use the bytes to populate the Frame properties
   _priority = bytes[0];
