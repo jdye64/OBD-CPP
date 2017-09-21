@@ -39,13 +39,13 @@ class Frame {
  private:
   char *raw;
   char *data;
-  int priority;
-  int addr_mode;
-  int rx_id;
-  int tx_id;
-  int type;
-  int seq_index;
-  int data_len;
+  int _priority;
+  int _addr_mode;
+  int _rx_id;
+  int _tx_id;
+  int _type;
+  int _seq_index;
+  int _data_len;
 };
 
 // Represents a fully parsed OBD message of one or more Frames (lines)
@@ -97,6 +97,8 @@ class protocol {
 
   int TX_ID_ENGINE = 0;
   int TX_ID_TRANSMISSION = 0;
+
+  static std::string removeAllOccurances(std::string &s, char *toRemove);
 
   protocol() {
 
