@@ -7,7 +7,6 @@
 
 Frame::Frame(std::string raw) {
   std::cout << "Creating Frame from RAW: " << raw << std::endl;
-  std::cout << "RAW Length: " << raw.size() << std::endl;
 
 
   std::string::size_type n;
@@ -17,15 +16,15 @@ Frame::Frame(std::string raw) {
     n = raw.find(" ");
   }
 
-  std::cout << "RAW Length: " << raw.size() << std::endl;
   std::vector<char> bytes;
+  std::vector<std::string> byteStrings;
 
   for (unsigned int i = 0; i < raw.length(); i += 2) {
     std::string byteString = raw.substr(i, 2);
     std::cout << "Byte String: " << byteString << std::endl;
     char byte = (char) strtol(byteString.c_str(), NULL, 16);
-    std::cout << "Byte: '" << byte << "'" << std::endl;
     bytes.push_back(byte);
+    byteStrings.push_back(byteString);
   }
 
   std::cout << "Number of Bytes: " << bytes.size() << std::endl;
@@ -36,16 +35,12 @@ Frame::Frame(std::string raw) {
   _tx_id = bytes[2];
 
   std::stringstream ss;
-  unsigned int rpmTotal;
-  ss << bytes[5] << bytes[6];
+  int rpmTotal;
+
+  ss << byteStrings[5] << byteStrings[6];
   ss >> std::hex >> rpmTotal;
   std::cout << "RPM Total: " << rpmTotal << std::endl;
   std::cout << "RPM: " << (rpmTotal / 4) << std::endl;
-
-  unsigned int rpm;
-  ss << "08A8";
-  ss >> std::hex >> rpm;
-  std::cout << "RPM Testing: " << (rpm / 4) << std::endl;
 
 }
 
