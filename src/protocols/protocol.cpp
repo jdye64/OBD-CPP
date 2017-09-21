@@ -45,6 +45,12 @@ Frame::Frame(std::string raw) {
   std::cout << (first + second) << std::endl;
   std::cout << ((first + second) / 4) << " RPM" << std::endl;
 
+  unsigned int rpmTotal;
+  ss << bytes[5];
+  ss << bytes[6];
+  ss >> std::hex >> rpmTotal;
+  std::cout << "RPM Total: " << (rpmTotal / 4) << std::endl;
+
 }
 
 Message::Message() {
