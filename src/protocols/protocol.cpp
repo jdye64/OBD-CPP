@@ -35,26 +35,18 @@ Frame::Frame(std::string raw) {
   _rx_id = bytes[1];
   _tx_id = bytes[2];
 
-  unsigned int first;
-  unsigned int second;
   std::stringstream ss;
-  ss << bytes[5];
-  ss >> std::hex >> first;
-  ss << bytes[6];
-  ss >> std::hex >> second;
-  std::cout << (first + second) << std::endl;
-  std::cout << ((first + second) / 4) << " RPM" << std::endl;
-
   unsigned int rpmTotal;
   ss << bytes[5];
   ss << bytes[6];
   ss >> std::hex >> rpmTotal;
-  std::cout << "RPM Total: " << (rpmTotal / 4) << std::endl;
+  std::cout << "RPM Total: " << rpmTotal << std::endl;
+  std::cout << "RPM: " << (rpmTotal / 4) << std::endl;
 
   unsigned int rpm;
   ss << "08A8";
   ss >> std::hex >> rpm;
-  std::cout << "RPM: " << rpm << std::endl;
+  std::cout << "RPM Testing: " << (rpm / 4) << std::endl;
 
 }
 

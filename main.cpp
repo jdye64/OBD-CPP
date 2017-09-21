@@ -1,11 +1,10 @@
 #include <iostream>
 #include "src/obd.h"
-#include <string>
-#include <iostream>
 #include <vector>
 
 
 int main() {
+
   std::cout << "Reading vehicle OBD data" << std::endl;
   std::cout << "Creating OBD connection in Main ...." << std::endl;
   obd obd;
