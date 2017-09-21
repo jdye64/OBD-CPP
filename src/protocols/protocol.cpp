@@ -37,8 +37,7 @@ Frame::Frame(std::string raw) {
 
   std::stringstream ss;
   unsigned int rpmTotal;
-  ss << bytes[5];
-  ss << bytes[6];
+  ss << bytes[5] << bytes[6];
   ss >> std::hex >> rpmTotal;
   std::cout << "RPM Total: " << rpmTotal << std::endl;
   std::cout << "RPM: " << (rpmTotal / 4) << std::endl;
