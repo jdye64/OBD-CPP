@@ -1,6 +1,9 @@
 #include "protocol.h"
 #include <iostream>
 #include <sstream>
+#include <stdio.h>
+#include <sstream>
+#include <string>
 
 Frame::Frame(std::string raw) {
   std::cout << "Creating Frame from RAW: " << raw << std::endl;
