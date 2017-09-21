@@ -1,11 +1,4 @@
-/**
-obd.cpp
-*/
-
 #include "obd.h"
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include "elm327.h"
 
 
@@ -25,9 +18,8 @@ void obd::connect(char *portStr, int baudrate) {
   elm327 elm(portStr, baudrate);
 
   std::cout << "Querying car with 010C Engine RPM" << std::endl;
-  //char *resp = obd::query("010C");
-  std::string resp = elm._send_and_parse("010C");
-  std::cout << "Response: " << resp << std::endl;
+  Message m = elm._send_and_parse("010C");
+  std::cout << "Engine RPM: " << m.getData() << std::endl;
 }
 
 char* obd::query(char *cmd) {

@@ -1,6 +1,8 @@
-#include <vector>
 #ifndef OBD_CPP_PROTOCOL_H
 #define OBD_CPP_PROTOCOL_H
+
+#include "iostream"
+#include <vector>
 
 
 class ECU {
@@ -24,7 +26,7 @@ class ECU {
 class Frame {
  public:
 
-  Frame(char *raw);
+  Frame(std::string);
 
   int getTXID() {
     return tx_id;
@@ -50,6 +52,8 @@ class Frame {
 class Message {
 
  public:
+  Message();
+  Message(std::vector<std::string> lines);
   Message(std::vector<Frame> frames);
 
   int tx_id() {
@@ -66,6 +70,10 @@ class Message {
 
   char *raw() {
     return _frames[0].getRaw();
+  }
+
+  char* getData() {
+    return data;
   }
 
  private:

@@ -13,6 +13,7 @@
 #include <chrono>
 #include <thread>
 #include <string>
+#include "protocols/protocol.h"
 
 static boost::asio::io_service ios;
 static const char _ELM_PROMPT = '>';
@@ -32,7 +33,7 @@ class elm327 {
 
   std::vector<std::string> splitMessageToLines(std::string &s);
 
-  std::string _send_and_parse(char* cmd);
+  Message _send_and_parse(char* cmd);
 
  protected:
 

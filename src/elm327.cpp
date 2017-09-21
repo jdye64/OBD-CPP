@@ -1,5 +1,6 @@
 #include "elm327.h"
 #include <stdio.h>
+#include "protocols/protocol.h"
 
 elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
 
@@ -71,9 +72,6 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
     std::cout << "Error setting protocol" << std::endl;
     exit(-1);
   }
-
-  resp = _send("010C", 0);    // Engine RPM request
-  std::cout << "Engine RPM: " << resp << std::endl;
 }
 
 /**
@@ -83,17 +81,20 @@ elm327::elm327(const char* portStr, int baudRate) : _serialPort(ios) {
  * @param cmd
  * @return
  */
-std::string elm327::_send_and_parse(char* cmd) {
+Message elm327::_send_and_parse(char* cmd) {
 
   if (_obdStatus == NOT_CONNECTED) {
     std::cout << "cannot _send_and_parse() when unconnected" << std::endl;
-    return std::string("");
+    Message m;
+    return m;
   }
 
-  std::string lines = _send(cmd, 0);
-  return lines;
-//  messages = self.__protocol(lines)
-//  return messages
+  std::string buffer = _send(cmd, 0);
+
+  std::vector<std::string> lines = elm327::splitMessageToLines(buffer);
+  std::cout << lines.size() << " lines split from the entire message received" << std::endl;
+  Message m(lines);
+  return m;
 }
 
 std::string elm327::_send(char* cmd, int msDelay) {
@@ -153,8 +154,8 @@ std::string elm327::_read() {
     numBytes += bytesRead;
 
     buffer.append(data, bytesRead);
-    buffer = elm327::removeAllOccurances(buffer, "\r");
-    buffer = elm327::removeAllOccurances(buffer, "\n");
+//    buffer = elm327::removeAllOccurances(buffer, "\r");
+//    buffer = elm327::removeAllOccurances(buffer, "\n");
     buffer = elm327::removeAllOccurances(buffer, "0x00");
 
     // End on a chevron (ELM prompt character)
@@ -168,9 +169,6 @@ std::string elm327::_read() {
 
   // Remove the ELM prompt
   buffer = elm327::removeAllOccurances(buffer, ">");
-
-  std::vector<std::string> lines = elm327::splitMessageToLines(buffer);
-  std::cout << lines.size() << " lines split from the entire message received" << std::endl;
 
   std::cout << "_read() -> '" << buffer.c_str() << "' Bytes: " << numBytes << std::endl;
   return buffer.c_str();
