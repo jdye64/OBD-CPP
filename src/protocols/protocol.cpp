@@ -22,6 +22,7 @@ Frame::Frame(std::string raw) {
 
   for (unsigned int i = 0; i < raw.length(); i += 2) {
     std::string byteString = raw.substr(i, 2);
+    std::cout << "Byte String: " << byteString << std::endl;
     char byte = (char) strtol(byteString.c_str(), NULL, 16);
     std::cout << "Byte: '" << byte << "'" << std::endl;
     bytes.push_back(byte);
