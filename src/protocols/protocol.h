@@ -29,7 +29,7 @@ class Frame {
   Frame(std::string);
 
   int getTXID() {
-    return tx_id;
+    return _tx_id;
   }
 
   char *getRaw() {
