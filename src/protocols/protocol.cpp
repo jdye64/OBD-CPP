@@ -3,7 +3,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <sstream>
-#include <string>
+#include <string.h>
 
 Frame::Frame(std::string raw) {
   std::cout << "Creating Frame from RAW: " << raw << std::endl;
@@ -16,7 +16,7 @@ Frame::Frame(std::string raw) {
     raw.erase(n, strlen(" "));
     n = raw.find(" ");
   }
-  
+
   std::cout << "RAW Length: " << raw.size() << std::endl;
   std::vector<char> bytes;
 
