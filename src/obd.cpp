@@ -15,25 +15,30 @@ void obd::connect(char *portStr, int baudrate) {
   std::cout << "Using Baudrate: " << baudrate << std::endl;
 
   // Create the ELM327 interface connection
-  elm327 elm(portStr, baudrate);
+  _elm = elm327(portStr, baudrate);
 
-  std::cout << "Querying car with 010C Engine RPM" << std::endl;
-  while (true) {
-    Message m = elm._send_and_parse("010C");
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-  }
+//  std::cout << "Querying car with 010C Engine RPM" << std::endl;
+//  while (true) {
+//    Message m = elm._send_and_parse("010C");
+//    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//  }
 
-  //std::cout << "Engine RPM: " << m.getData() << std::endl;
 }
 
-char* obd::query(char *cmd) {
+OBDResponse obd::query(char *cmd) {
+
+  if (_elm.getOBDStatus() == NOT_CONNECTED) {
+    std::cout << "ERROR: Query failed. ELM not connected!" << std::endl;
+    return OBDResponse();
+  }
+
   std::cout << "Sending CMD: " << cmd << std::endl;
-
-
-  //obd::buildCommandString(cmd);
+  char* cmdStr = this->buildCommandString(cmd);
+  Message message = _elm._send_and_parse(cmdStr);
+  
 }
 
 // Creates the appropriate command string to send to the elm327 interface
-void obd::buildCommandString(char *cmd) {
-
+char* obd::buildCommandString(char *cmd) {
+  return cmd;
 }

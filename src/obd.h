@@ -6,6 +6,8 @@
 #define OBD_CPP_OBD_H
 
 #include <iostream>
+#include "OBDResponse.h"
+#include "elm327.h"
 
 /**
 Class representing an OBD-II connection
@@ -28,7 +30,7 @@ class obd {
   // Attempts to instantiate an ELM327 connection object
   void connect(char *portStr, int baudrate);
 
-  char* query(char *cmd);
+  OBDResponse query(char *cmd);
 
  protected:
   char *_portStr;      // Identifier for the serial port connection
@@ -38,7 +40,8 @@ class obd {
   int _lastCommand;   // Last command used for running previous command.
 
  private:
-  void buildCommandString(char *cmd);
+  char* buildCommandString(char *cmd);
+  elm327 _elm;
 };
 
 #endif //OBD_CPP_OBD_H

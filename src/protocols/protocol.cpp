@@ -7,8 +7,9 @@
 
 Frame::Frame(std::string raw) {
   std::cout << "Creating Frame from RAW: " << raw << std::endl;
+  _rawFrameData = raw;
 
-
+  // Remove all of the spaces and invalid characters.
   std::string::size_type n;
   n = raw.find(" ");
   while (n != std::string::npos) {
@@ -16,31 +17,65 @@ Frame::Frame(std::string raw) {
     n = raw.find(" ");
   }
 
-  std::vector<char> bytes;
-  std::vector<std::string> byteStrings;
+  // Drop the frame if the size of the byte array is odd since all should be even.
+  if (raw.size() & 1) {
+    std::cout << "WARN: Frame length is odd. Dropping frame." << std::endl;
+    return;
+  }
+
+  std::vector<std::string> bytes;
 
   for (unsigned int i = 0; i < raw.length(); i += 2) {
     std::string byteString = raw.substr(i, 2);
-    //std::cout << "Byte String: " << byteString << std::endl;
-    char byte = (char) strtol(byteString.c_str(), NULL, 16);
-    bytes.push_back(byte);
-    byteStrings.push_back(byteString);
+    bytes.push_back(byteString);
   }
 
-  //std::cout << "Number of Bytes: " << bytes.size() << std::endl;
+  if(bytes.size() < 6) {
+    std::cout << "Dropped frame for being too short" << std::endl;
+    return;
+  }
 
-  // Use the bytes to populate the Frame properties
-  _priority = bytes[0];
-  _rx_id = bytes[1];
-  _tx_id = bytes[2];
+  if (bytes.size() > 11) {
+    std::cout << "Dropped frame for being too long" << std::endl;
+    return;
+  }
+
+  // Ex.
+  // [Header] [       Frame        ]
+  // 48 6B 10  41 00 BE 7F B8 13 ck
+  // ck = checksum byte
+
+  // Exclude header and trailing checksum (handled by ELM adapter)
+  int i = 1;
+  for (std::string b : bytes) {
+    if (i > 3 && i != bytes.size()) {
+      _frameBytes.push_back(b);
+    } else if (i <= 3) {
+      _headerBytes.push_back(b);
+    } else {
+      _checksumByte = b;
+    }
+    ++i;
+  }
 
   std::stringstream ss;
-  int rpmTotal;
+  int val;
+  ss << _headerBytes[0];
+  ss >> std::hex >> val;
+  _priority = val;
+  ss << _headerBytes[1];
+  ss >> std::hex >> val;
+  _rx_id = val;
+  ss << _headerBytes[2];
+  ss >> std::hex >> val;
+  _tx_id = val;
 
-  ss << byteStrings[5] << byteStrings[6];
-  ss >> std::hex >> rpmTotal;
-  std::cout << "RPM Total: " << rpmTotal << std::endl;
-  std::cout << "RPM: " << (rpmTotal / 4) << std::endl;
+//  int rpmTotal;
+//
+//  ss << byteStrings[5] << byteStrings[6];
+//  ss >> std::hex >> rpmTotal;
+//  std::cout << "RPM Total: " << rpmTotal << std::endl;
+//  std::cout << "RPM: " << (rpmTotal / 4) << std::endl;
 
 }
 

@@ -22,6 +22,7 @@ class elm327 {
 
  public:
 
+  elm327();
   elm327(const char* portStr, int baudRate);
 
   ~ elm327() {
@@ -34,6 +35,10 @@ class elm327 {
   std::vector<std::string> splitMessageToLines(std::string &s);
 
   Message _send_and_parse(char* cmd);
+
+  std::string getOBDStatus() {
+    return std::string(_obdStatus);
+  }
 
  protected:
 
